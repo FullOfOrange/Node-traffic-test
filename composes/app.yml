@@ -1,0 +1,21 @@
+version: '3.7'
+services:
+  node:
+    build:
+      context: ..
+      dockerfile: app.Dockerfile
+    container_name: node
+    restart: always
+    networks:
+      - app
+
+  redis:
+    image: redis:5.0.6-alpine
+    container_name: redis
+    restart: always
+    networks:
+      - app
+
+networks:
+  app:
+    name: app_bridge
