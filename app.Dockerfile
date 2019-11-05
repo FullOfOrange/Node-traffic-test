@@ -1,5 +1,5 @@
 ## nodejs LTS 중 10.16.3 을 사용
-FROM node:10.16.3-alpine
+FROM node:10.17.0-alpine
 
 COPY server/package.json /server/package.json
 COPY server/src /server/src
