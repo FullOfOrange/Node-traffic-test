@@ -1,0 +1,7 @@
+version: '3.7'
+services:
+  test:
+    image: jdd04026/artillery
+    container_name: test
+    restart: always
+    network_mode: "host"

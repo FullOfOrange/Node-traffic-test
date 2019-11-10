@@ -6,6 +6,8 @@ services:
       dockerfile: app.Dockerfile
     container_name: node
     restart: always
+    ports:
+      - "3000:3000"
     networks:
       - app
 
@@ -13,6 +15,8 @@ services:
     image: redis:5.0.6-alpine
     container_name: redis
     restart: always
+    ports:
+      - "6379:6379"
     networks:
       - app
 
