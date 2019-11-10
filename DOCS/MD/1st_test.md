@@ -26,3 +26,18 @@ $ artillery quick --count 10 -n 50 http://localhost:3000/
 사유는 get을 하고 transaction을 수행하는데 있어, transaction 내에 get이 요청되는데, 이때의 ticket 값이 조건을 결정하는 기준이 되기 때문.
 Redis의 Transaction은 multi에 적혀있는 모든 명령어가 Queue로 들어가서 수행되며, 트랜잭션 내부에서 어떠한 결정도 내릴 수 없다.
 만약 결정을 하고싶다면, get과 decr 을 같이 하면서 get에 의한 값을 가지고 decr 을 할지 결정해야 할듯
+
+
+```javascript
+multi = client.multi();
+multi.decr("0",redis.print);
+multi.exec((err,rep) => {
+    if(rep < 0) {
+        client.set("0",0)
+        res.status(404).send()
+    } else {
+        next();
+    }
+})
+```
+위의 코드가 결과가 음수가 되기만 하면 어쨋든 몇번의 요청에도 응답은 잘 띄워준다. 근데 만약, decrby 로 좀 더 많은 양의 티켓 구매를 요청할 경우 이것의 처리가 불가능할 수도 있다.
