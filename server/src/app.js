@@ -6,29 +6,26 @@ const REDIS_OPTIONS = {
     host: "127.0.0.1",
     port: 6379
 }
-//initRedis로 남은 티켓 장수를 설정, key: "0"
 const redis = require('redis'),
       client = redis.createClient(REDIS_OPTIONS);
+
+//Server를 실행하면 list 에 때려박음
+client.del("0")
+client.lpush('0',[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],(err,rep) => {console.log(rep);});
+//-------------------
 
 app.get('/', checkTicketLeft, (req,res) => {
     res.send()
 });
 
-async function checkTicketLeft(req,res,next){
-    date = new Date()
-    multi = client.multi();
-    multi.mget("0",(err,rep) => {
-        if(+rep[0] < 0){
-            console.log('a');
-            multi.decr("0",redis.print);
-        }
-    })
-    multi.exec((err,rep) => {
-        console.log(date,rep)
-        if(rep < 0) {
-            res.status(404).send()
-        } else {
-            next()
+function checkTicketLeft(req,res,next){
+    date = new Date();
+    client.rpop('0',(err,reply) => {
+        if(reply !== null){
+            console.log(date,reply)
+            next();
+        }else{
+            res.status(403).send()
         }
     })
 }
